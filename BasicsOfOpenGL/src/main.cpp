@@ -1,4 +1,4 @@
-#include "VertexArray.h"
+#include "Render.h"
 
 int main()
 {
@@ -8,8 +8,8 @@ int main()
 	
 	App::GetVertexInfo();
 
-	//VertexArray va;
-	//va.Bind();
+	VertexArray va;
+	va.Bind();
 
 	App::GetVertexInfo();
 
@@ -30,29 +30,23 @@ int main()
 	
 	App::GetVertexInfo();
 
-	//va.Unbind();
+	va.Unbind();
 
 	App::GetVertexInfo();
 
-	//va.AddBuffer(&ib, &vb);
-	vb.Bind(0,0);
-	ib.Bind();
+	va.AddBuffers(&ib, &vb);
 
 	App::GetVertexInfo();
 
-	const auto& layouts = vb.GetLayout().GetElements();
-	for (int i = 0; i < layouts.size(); ++i)
-	{
-		GLDEBUG(glEnableVertexAttribArray(i));
-		GLDEBUG(glVertexAttribFormat(i, layouts[i]._dim, layouts[i]._type, layouts[i]._normalize, layouts[i]._relativeoffset));
-		GLDEBUG(glVertexAttribBinding(i, 0));
-	}
+	Shader shader1("shaders/basic.shader");
+
+	Render render1;
 
 	while (mainApp.AppRunning())
 	{
-		GLDEBUG(glClear(GL_COLOR_BUFFER_BIT));
+		render1.Clear();
 
-		GLDEBUG(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr));
+		render1.Draw(va, shader1, 0);
 
 		mainApp.Refresh();
 	}

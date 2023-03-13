@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Render.cpp" />
     <ClCompile Include="src\GL_Debug.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="include\VBLayout.h" />
     <ClInclude Include="include\VertexArray.h" />
     <ClInclude Include="include\VertexBuffer.h" />
+    <ClInclude Include="include\Render.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\basic.shader" />

@@ -50,5 +50,7 @@ public:
 	void AddLayout<unsigned int>(const int dim);
 	template<>
 	void AddLayout<unsigned char>(const int dim);
+
+	const bool CheckAttribOverflow() const;
 };
 
