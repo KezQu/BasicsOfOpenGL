@@ -26,7 +26,7 @@ const VertexBuffer& VertexArray::GetVB(const unsigned int index) const
 	return *(_Vbuffers[index]._vb);
 }
 
-const unsigned int VertexArray::GetIBSize(const unsigned int index) const
+const unsigned int VertexArray::GetIBCount(const unsigned int index) const
 {
 	return GetIB(index).GetCount();
 }
@@ -48,22 +48,14 @@ void VertexArray::Unbind() const
 	App::ActiveVAO = 0;
 }
 
-void VertexArray::AddBuffer(const IndexBuffer* ib, const VertexBuffer* vb)
+const unsigned int VertexArray::AddBuffers(const IndexBuffer* ib, const VertexBuffer* vb)
 {
-	int maxBufferSize = 0;
-	GLDEBUG(glGetIntegerv(GL_MAX_VERTEX_ATTRIB_BINDINGS, &maxBufferSize));
-	std::cout << maxBufferSize << std::endl;
-	if(_Vbuffers.size() == maxBufferSize)
-	{
-		std::cout << "Number of VertexBuffer overflow !!!" << std::endl;
-		ASSERT(false);
-	}
-
 	IndexVertexPair tmp_pair = { ib,vb };
 	_Vbuffers.push_back(tmp_pair);
 
 	Bind();
 	SwapBuffers(_Vbuffers.size() - 1);
+	return _Vbuffers.size() - 1;
 }
 
 inline void VertexArray::DisableArray(const unsigned int index) const
@@ -76,7 +68,7 @@ inline void VertexArray::EnableArray(const unsigned int index) const
 	GLDEBUG(glEnableVertexAttribArray(index));
 }
 
-void VertexArray::SwapBuffers(const unsigned int index) const
+void VertexArray::SwapBuffers(const int index) const
 {
 	if(_activeBuffer != -1)
 	{
@@ -89,15 +81,18 @@ void VertexArray::SwapBuffers(const unsigned int index) const
 			GLDEBUG(glDisableVertexAttribArray(i));
 		}
 	}
-	_Vbuffers[index]._vb->Bind(index, _rendererID);
-	_Vbuffers[index]._ib->Bind();
-
-	const auto& layouts = _Vbuffers[index]._vb->GetLayout().GetElements();
-	for (int i = 0; i < layouts.size(); ++i)
+	if(index != -1)
 	{
-		GLDEBUG(glEnableVertexAttribArray(i));
-		GLDEBUG(glVertexAttribFormat(i, layouts[i]._dim, layouts[i]._type, layouts[i]._normalize, layouts[i]._relativeoffset));
-		GLDEBUG(glVertexAttribBinding(i, index));
+		_Vbuffers[index]._vb->Bind(index, _rendererID);
+		_Vbuffers[index]._ib->Bind();
+
+		const auto& layouts = _Vbuffers[index]._vb->GetLayout().GetElements();
+		for (int i = 0; i < layouts.size(); ++i)
+		{
+			GLDEBUG(glEnableVertexAttribArray(i));
+			GLDEBUG(glVertexAttribFormat(i, layouts[i]._dim, layouts[i]._type, layouts[i]._normalize, layouts[i]._relativeoffset));
+			GLDEBUG(glVertexAttribBinding(i, index));
+		}
 	}
 
 	_activeBuffer = index;

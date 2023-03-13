@@ -13,9 +13,9 @@ App::App(const int width, const int height, const std::string title, const int m
 {
 	if (!glfwInit())
 		exit(-1);
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, _majorVersion);
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, _minorVersion);
-	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, _majorVersion);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, _minorVersion);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	_contextWindow = glfwCreateWindow(_windowWidth, _windowHeight, _windowTitle.c_str(), NULL, NULL);
 	
